@@ -20,9 +20,6 @@ plugin = Plugin(
     package="q2_viromics",
     description="A QIIME 2 plugin for viromics analysis.",
     short_description="A QIIME 2 plugin for viromics analysis.",
-    # Please retain the plugin-level citation of 'Caporaso-Bolyen-2024'
-    # as attribution of the use of this template, in addition to any citations
-    # you add.
     citations=[citations['Caporaso-Bolyen-2024']]
 )
 
