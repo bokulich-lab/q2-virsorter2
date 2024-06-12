@@ -5,7 +5,8 @@ channels:
 - bioconda
 dependencies:
   - qiime2-metagenome
-  # Note 1: Add any additional conda dependencies here.
+  - virsorter=2
+  - checkv
   - pip
   - pip:
   # Note 2: Add any additional pip dependencies here.
