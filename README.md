@@ -25,13 +25,13 @@ cd q2-viromics
 Then, run:
 
 ```shell
-conda env create -n q2-viromics-dev --file ./environments/q2-viromics-qiime2-metagenome-2024.10.yml
+mamba create -n q2-viromics -c conda-forge -c bioconda -c  https://packages.qiime2.org/qiime2/2023.5/tested/ -c defaults q2-types numpy=1.23.5 q2cli virsorter=2 "python=3.8" scikit-learn=0.22.1 pandas seaborn hmmer==3.3 prodigal=2.6 screed=1 ruamel.yaml click pip last ncbi-genome-download checkv
 ```
 
 After this completes, activate the new environment you created by running:
 
 ```shell
-conda activate q2-viromics-dev
+conda activate q2-viromics
 ```
 
 ```shell
