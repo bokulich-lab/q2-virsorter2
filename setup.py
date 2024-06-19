@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 import versioneer
 
-description = ("A QIIME 2 plugin for viromics identification and analysis.")
+description = "A QIIME 2 plugin for viromics identification and analysis."
 
 setup(
     name="q2-viromics",
@@ -23,17 +23,17 @@ setup(
     description=description,
     url="https://github.com/bokulich-lab/q2-viromics",
     entry_points={
-        "qiime2.plugins": [
-            "q2_viromics="
-            "q2_viromics"
-            ".plugin_setup:plugin"]
+        "qiime2.plugins": ["q2_viromics=" "q2_viromics" ".plugin_setup:plugin"]
     },
     package_data={
         "q2_viromics": ["citations.bib"],
-        "q2_viromics.tests": ["data/*",
-                              "data/*/*",
-                              "data/*/*/*",
-                              "data/*/*/*/*",],
+        "q2_viromics.tests": [
+            "data/*",
+            "data/*/*",
+            "data/*/*/*",
+            "data/*/*/*/*",
+            "data/*/*/*/*/*",
+        ],
     },
     zip_safe=False,
 )
