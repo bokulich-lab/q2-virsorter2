@@ -7,14 +7,14 @@
 # ----------------------------------------------------------------------------
 
 from qiime2.plugin import Citations, Plugin
-from q2_types.feature_data import FeatureData, Sequence
+
+# from q2_types.feature_data import FeatureData, Sequence
 from q2_viromics import __version__
+from q2_viromics.types._format import Virsorter2DbDirFmt
+from q2_viromics.types._type import Virsorter2Db
+
 # from q2_viromics._virsorter2 import virsorter2_fetch_db
 
-from q2_viromics.types._format import (
-    Virsorter2DbDirFmt,
-)
-from q2_viromics.types._type import Virsorter2Db
 
 citations = Citations.load("citations.bib", package="q2_viromics")
 
@@ -25,7 +25,7 @@ plugin = Plugin(
     package="q2_viromics",
     description="A QIIME 2 plugin for viromics analysis.",
     short_description="A QIIME 2 plugin for viromics analysis.",
-    citations=[citations['Caporaso-Bolyen-2024']]
+    citations=[citations["Caporaso-Bolyen-2024"]],
 )
 
 plugin.register_formats(
@@ -36,9 +36,7 @@ plugin.register_semantic_types(Virsorter2Db)
 plugin.register_artifact_class(
     Virsorter2Db,
     directory_format=Virsorter2DbDirFmt,
-    description=(
-        "Represents a group Virsorter2 database."
-    ),
+    description=("Represents a group Virsorter2 database."),
 )
 
 """
@@ -48,10 +46,11 @@ plugin.methods.register_function(
     parameters={},
     outputs=[('virsorter2_database', FeatureData[Sequence])],
     parameter_descriptions={},
-    output_descriptions={'virsorter2_database': 'The duplicated feature table.'},
+    output_descriptions={'virsorter2_database': 'Something'},
     name='Virsorter2 database',
-    description=("Fetch a Virsorter2 database that includes a collection of known "
-                "viral genomes and key genes that are typically found in viral genomes."),
+    description=("Fetch a Virsorter2 database that includes a collection "
+                "of known viral genomes and key genes that are typically "
+                "found in viral genomes."),
     citations=[]
 )
 """

@@ -7,13 +7,21 @@
 # ----------------------------------------------------------------------------
 from qiime2.plugin.testing import TestPluginBase
 
-from q2_viromics.types._format import GeneralTSVFormat, RbsCatetoryNotesFormat, RbsCatetoryFormat, HallmarkGeneListFormat, Virsorter2DbDirFmt, GeneralFileFormat
+from q2_viromics.types._format import (
+    GeneralFileFormat,
+    GeneralTSVFormat,
+    HallmarkGeneListFormat,
+    RbsCatetoryFormat,
+    RbsCatetoryNotesFormat,
+    Virsorter2DbDirFmt,
+)
+
 
 class TestVirsorter2DbFormats(TestPluginBase):
     package = "q2_viromics.tests"
 
     def test_Virsorter2Db_GeneralTSVFormat(self):
-        filepath = self.get_data_path("type/database/hmm/pfam/Pfam-A-acc2desc.tsv")
+        filepath = self.get_data_path("type/database/hmm/pfam/Pfam-A.tsv")
         format = GeneralTSVFormat(filepath, mode="r")
         format.validate()
 
@@ -28,7 +36,9 @@ class TestVirsorter2DbFormats(TestPluginBase):
         format.validate()
 
     def test_Virsorter2Db_HallmarkGeneListFormat(self):
-        filepath = self.get_data_path("type/database/group/dsDNAphage/hallmark-gene.list")
+        filepath = self.get_data_path(
+            "type/database/group/dsDNAphage/hallmark-gene.list"
+        )
         format = HallmarkGeneListFormat(filepath, mode="r")
         format.validate()
 
@@ -41,4 +51,3 @@ class TestVirsorter2DbFormats(TestPluginBase):
         filepath = self.get_data_path("type/database/")
         format = Virsorter2DbDirFmt(filepath, mode="r")
         format.validate()
-
