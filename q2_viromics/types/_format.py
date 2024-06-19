@@ -139,7 +139,7 @@ class HallmarkGeneListFormat(model.TextFileFormat):
         self._validate()
 
 
-class GeneralFileFormat(model.BinaryFileFormat):
+class GeneralBinaryFileFormat(model.BinaryFileFormat):
     def _validate_(self, level):
         pass
 
@@ -230,10 +230,6 @@ class HMMFormat(model.TextFileFormat):
         if not mandatory_fields["HMM"]:
             raise ValidationError("HMM block is missing.")
 
-        # Additional validation for specific fields
-        if not mandatory_fields["HMMER3"].startswith("HMMER3"):
-            raise ValidationError("HMMER3 header format is incorrect.")
-
         if int(mandatory_fields["LENG"]) <= 0:
             raise ValidationError("LENG field should be a positive nonzero integer.")
 
@@ -316,10 +312,10 @@ class Virsorter2DbDirFmt(model.DirectoryFormat):
         r"group/.+/.+\.list$", format=HallmarkGeneListFormat
     )
     model_file = model.FileCollection(
-        r"group/.+/model$", format=GeneralFileFormat, optional=True
+        r"group/.+/model$", format=GeneralBinaryFileFormat, optional=True
     )
     db_files = model.FileCollection(
-        r"group/.+/.+\.db$", format=GeneralFileFormat, optional=True
+        r"group/.+/.+\.db$", format=GeneralBinaryFileFormat, optional=True
     )
     rbs_catetory_notes = model.File(
         r"rbs/rbs-catetory-notes.tsv$", format=RbsCatetoryNotesFormat, optional=True
@@ -327,7 +323,7 @@ class Virsorter2DbDirFmt(model.DirectoryFormat):
     rbs_catetory = model.File(
         r"rbs/rbs-catetory.tsv$", format=RbsCatetoryFormat, optional=True
     )
-    done_all_setup = model.File(r"Done_all_setup$", format=GeneralFileFormat)
+    done_all_setup = model.File(r"Done_all_setup$", format=GeneralBinaryFileFormat)
     conda_envs = model.FileCollection(
         r"conda_envs/.+", format=model.BinaryFileFormat, optional=True
     )
