@@ -324,20 +324,23 @@ class Virsorter2DbDirFmt(model.DirectoryFormat):
         r"rbs/rbs-catetory.tsv$", format=RbsCatetoryFormat, optional=True
     )
     done_all_setup = model.File(r"Done_all_setup$", format=GeneralBinaryFileFormat)
-    conda_envs = model.FileCollection(
-        r"conda_envs/.+", format=model.BinaryFileFormat, optional=True
-    )
 
-    def _path_maker(self, name):
-        return str(name)
+    @hmm_files.set_path_maker
+    def hmm_files_path_maker(self, sample_id):
+        return "hmm/{}/{}.hmm".format(sample_id[0], sample_id[1])
 
-    def __init__(self, path, mode):
-        super().__init__(path, mode)
+    @tsv_file.set_path_maker
+    def tsv_file_path_maker(self, sample_id):
+        return "hmm/{}/{}.tsv".format(sample_id[0], sample_id[1])
 
-        # Overwrite path maker methods for all file collections
-        for var_name, var_value in vars(self.__class__).items():
-            if isinstance(var_value, model.FileCollection):
-                var_value.set_path_maker(self._path_maker)
+    @hallmark_gene_list.set_path_maker
+    def hallmark_gene_list_path_maker(self, sample_id):
+        return "group/{}/{}.list".format(sample_id[0], sample_id[1])
 
-    def _validate_(self, level):
-        pass
+    @model_file.set_path_maker
+    def model_file_path_maker(self, sample_id):
+        return "group/{}/model".format(sample_id[0])
+
+    @db_files.set_path_maker
+    def db_files_path_maker(self, sample_id):
+        return "group/{}/{}.db".format(sample_id[0], sample_id[1])
