@@ -32,21 +32,15 @@ def create_fetch_db_cmd(database, n_jobs):
 def delete_directory(path):
     if os.path.exists(path):
         shutil.rmtree(path)
-    else:
-        pass
 
 
 # Fetch the Virsorter2 database
-def virsorter2_fetch_db(
-    n_jobs: int = 10,
-) -> Virsorter2DbDirFmt:
+def virsorter2_fetch_db(n_jobs: int = 10) -> Virsorter2DbDirFmt:
     # Initialize a directory format object to store the Minimap2 index
     database = Virsorter2DbDirFmt()
 
     # Construct the command to build the Minimap2 index file
     fetch_db_cmd = create_fetch_db_cmd(database, n_jobs)
-
-    print("Initiated database fetching...\n")
 
     try:
         # Execute the command to create the Minimap2 index database
@@ -58,9 +52,8 @@ def virsorter2_fetch_db(
             "stdout and stderr to learn more."
         )
 
-    delete_directory(os.path.join(str(database.path), ".snakemake"))
-    delete_directory(os.path.join(str(database.path), "conda_envs"))
-
-    print("Database fetched!\nImporting into an artifact...\n")
+    # Clean up the unnecessary directories
+    for dir_name in [".snakemake", "conda_envs"]:
+        delete_directory(os.path.join(str(database.path), dir_name))
 
     return database
