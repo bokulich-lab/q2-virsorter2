@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 import versioneer
 
-description = "A QIIME 2 plugin for viromics identification and analysis."
+description = "A QIIME 2 plugin for the identification and analysis of viral sequences."
 
 setup(
     name="q2-viromics",
