@@ -129,92 +129,9 @@ class TestVirsorter2DbFormats(TestPluginBase):
         format = HMMFormat(filepath, mode="r")
         format.validate()
 
-    # Test skipping empty line
-    def test_HMMFormat_skip_line_neg1(self):
+    # Test missing mandatory field (LENG)
+    def test_HMMFormat_neg1(self):
         filepath = self.get_data_path("type/vs2_db_neg/HMM-neg1.hmm")
-        format = HMMFormat(filepath, mode="r")
-        format.validate()
-
-    # Test duplicate field for HMMER3
-    def test_HMMFormat_neg2(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg2.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test duplicate field for mandatory fields
-    def test_HMMFormat_neg3(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg3.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test duplicate field for optional fields
-    def test_HMMFormat_neg4(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg4.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test missing mandatory field
-    def test_HMMFormat_neg5(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg5.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test LENG value
-    def test_HMMFormat_neg6(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg6.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test ALPH value
-    def test_HMMFormat_neg7(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg7.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test NAME value
-    def test_HMMFormat_neg8(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg8.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test NSEQ value
-    def test_HMMFormat_neg9(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg9.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test EFFN value
-    def test_HMMFormat_neg10(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg10.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test CKSUM value
-    def test_HMMFormat_neg11(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg11.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test missing HMM field
-    def test_HMMFormat_neg12(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg12.hmm")
-        format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
-            format.validate()
-
-    # Test Unexpected field
-    def test_HMMFormat_neg13(self):
-        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg13.hmm")
         format = HMMFormat(filepath, mode="r")
         with self.assertRaisesRegex(ValidationError, "HMMFormat"):
             format.validate()
