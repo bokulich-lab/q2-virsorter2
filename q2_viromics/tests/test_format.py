@@ -133,7 +133,14 @@ class TestVirsorter2DbFormats(TestPluginBase):
     def test_HMMFormat_neg1(self):
         filepath = self.get_data_path("type/vs2_db_neg/HMM-neg1.hmm")
         format = HMMFormat(filepath, mode="r")
-        with self.assertRaisesRegex(ValidationError, "HMMFormat"):
+        with self.assertRaisesRegex(ValueError, "Invalid"):
+            format.validate()
+
+    # Test missing value (for MM)
+    def test_HMMFormat_neg2(self):
+        filepath = self.get_data_path("type/vs2_db_neg/HMM-neg2.hmm")
+        format = HMMFormat(filepath, mode="r")
+        with self.assertRaisesRegex(ValueError, "Invalid"):
             format.validate()
 
     def test_Virsorter2DbDirFmt(self):

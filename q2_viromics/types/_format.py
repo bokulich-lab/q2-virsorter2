@@ -8,6 +8,7 @@
 import subprocess
 
 import pandas as pd
+from pyhmmer.plan7 import HMMFile
 from qiime2.core.exceptions import ValidationError
 from qiime2.plugin import model
 
@@ -150,19 +151,17 @@ class GeneralBinaryFileFormat(model.BinaryFileFormat):
 
 # Format for validating HMM profiles files
 class HMMFormat(model.TextFileFormat):
-    def _validate_(self, level):
-        hmmstat_cmd = ["hmmstat", str(self)]
-        try:
-            # Run the hmmstat command
-            subprocess.run(hmmstat_cmd, check=True, capture_output=True, text=True)
-        except subprocess.CalledProcessError as e:
-            if "bad file format" in e.stderr:
-                raise ValidationError("Validation error: bad file format in HMM file.")
-            else:
+    def _validate_(self, level: str):
+        tolerance = 0.0001
+        with HMMFile(str(self)) as hmm_file:
+            hmm = hmm_file.read()
+
+            try:
+                hmm.validate(tolerance=tolerance)
+            except subprocess.CalledProcessError as e:
                 raise ValidationError(
-                    f"An error was encountered while running hmmstat, "
-                    f"(return code {e.returncode}), please inspect stdout and stderr "
-                    "to learn more."
+                    f"An error was encountered while validating hmm file, "
+                    f"(return code {e.returncode})."
                 )
 
 
