@@ -7,32 +7,50 @@
 # ----------------------------------------------------------------------------
 
 from qiime2.plugin import Citations, Plugin
-from q2_types.feature_table import FeatureTable, Frequency
+
+# from q2_types.feature_data import FeatureData, Sequence
 from q2_viromics import __version__
-from q2_viromics._methods import duplicate_table
+from q2_viromics.types._format import Virsorter2DbDirFmt
+from q2_viromics.types._type import Virsorter2Db
+
+# from q2_viromics._virsorter2 import virsorter2_fetch_db
+
 
 citations = Citations.load("citations.bib", package="q2_viromics")
 
 plugin = Plugin(
     name="viromics",
     version=__version__,
-    website="https://example.com",
+    website="https://github.com/bokulich-lab/q2-viromics",
     package="q2_viromics",
     description="A QIIME 2 plugin for viromics analysis.",
     short_description="A QIIME 2 plugin for viromics analysis.",
-    citations=[citations['Caporaso-Bolyen-2024']]
+    citations=[citations["Caporaso-Bolyen-2024"]],
 )
 
+plugin.register_formats(
+    Virsorter2DbDirFmt,
+)
+plugin.register_semantic_types(Virsorter2Db)
+
+plugin.register_artifact_class(
+    Virsorter2Db,
+    directory_format=Virsorter2DbDirFmt,
+    description=("Represents a group Virsorter2 database."),
+)
+
+"""
 plugin.methods.register_function(
-    function=duplicate_table,
-    inputs={'table': FeatureTable[Frequency]},
+    function=virsorter2_fetch_db,
+    inputs={},
     parameters={},
-    outputs=[('new_table', FeatureTable[Frequency])],
-    input_descriptions={'table': 'The feature table to be duplicated.'},
+    outputs=[('virsorter2_database', FeatureData[Sequence])],
     parameter_descriptions={},
-    output_descriptions={'new_table': 'The duplicated feature table.'},
-    name='Duplicate table',
-    description=("Create a copy of a feature table with a new uuid. "
-                 "This is for demonstration purposes only. 🧐"),
+    output_descriptions={'virsorter2_database': 'Something'},
+    name='Virsorter2 database',
+    description=("Fetch a Virsorter2 database that includes a collection "
+                "of known viral genomes and key genes that are typically "
+                "found in viral genomes."),
     citations=[]
 )
+"""

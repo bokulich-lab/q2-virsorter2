@@ -6,8 +6,12 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import pandas as pd
+# import pandas as pd
 
+# from q2_types.feature_data import DNAFASTAFormat
 
-def duplicate_table(table: pd.DataFrame) -> pd.DataFrame:
-    return table
+"""
+def virsorter2_fetch_db() -> DNAFASTAFormat:
+
+    return DNAFASTAFormat()
+"""

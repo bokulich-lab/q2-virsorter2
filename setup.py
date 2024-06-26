@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-# Copyright (c) 2024, Christos Matzoros.
+# Copyright (c) 2024, Bokulich Lab.
 #
 # Distributed under the terms of the Modified BSD License.
 #
@@ -10,7 +10,7 @@ from setuptools import find_packages, setup
 
 import versioneer
 
-description = ("A template QIIME 2 plugin.")
+description = "A QIIME 2 plugin for the identification and analysis of viral sequences."
 
 setup(
     name="q2-viromics",
@@ -21,16 +21,19 @@ setup(
     author="Christos Matzoros",
     author_email="christosmatzoros@gmail.com",
     description=description,
-    url="https://example.com",
+    url="https://github.com/bokulich-lab/q2-viromics",
     entry_points={
-        "qiime2.plugins": [
-            "q2_viromics="
-            "q2_viromics"
-            ".plugin_setup:plugin"]
+        "qiime2.plugins": ["q2_viromics=" "q2_viromics" ".plugin_setup:plugin"]
     },
     package_data={
         "q2_viromics": ["citations.bib"],
-        "q2_viromics.tests": ["data/*"],
+        "q2_viromics.tests": [
+            "data/*",
+            "data/*/*",
+            "data/*/*/*",
+            "data/*/*/*/*",
+            "data/*/*/*/*/*",
+        ],
     },
     zip_safe=False,
 )
