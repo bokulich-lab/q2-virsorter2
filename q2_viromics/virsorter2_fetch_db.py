@@ -46,7 +46,7 @@ def virsorter2_fetch_db(n_jobs: int = 10) -> Virsorter2DbDirFmt:
 
     # Clean up the unnecessary directories
     for dir_name in [".snakemake", "conda_envs"]:
-        if os.path.exists(dir_name):
-            shutil.rmtree(dir_name)
+        if os.path.exists(os.path.join(str(database.path), dir_name)):
+            shutil.rmtree(os.path.join(str(database.path), dir_name))
 
     return database
