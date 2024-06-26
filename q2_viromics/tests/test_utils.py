@@ -8,6 +8,7 @@
 import os
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from q2_viromics._utils import (
     _construct_param,
@@ -15,6 +16,7 @@ from q2_viromics._utils import (
     _process_common_input_params,
     create_directory,
     get_full_path,
+    run_command,
     run_commands_with_pipe,
 )
 
@@ -72,6 +74,20 @@ class TestCommandOperations(unittest.TestCase):
             run_commands_with_pipe(
                 cmd1, cmd2, cmd3, temp_dir + "res.out", verbose=False
             )  # Assuming no exception is good enough for this test
+
+
+class TestRunCommand(unittest.TestCase):
+    @patch("subprocess.run")
+    def test_run_command_with_verbose(self, mock_run):
+        cmd = ["echo", "hello"]
+        run_command(cmd, verbose=True)
+        mock_run.assert_called_once_with(cmd, check=True)
+
+    @patch("subprocess.run")
+    def test_run_command_no_verbose(self, mock_run):
+        cmd = ["echo", "hello"]
+        run_command(cmd, verbose=False)
+        mock_run.assert_called_once_with(cmd, check=True)
 
 
 class TestParameterConstruction(unittest.TestCase):
