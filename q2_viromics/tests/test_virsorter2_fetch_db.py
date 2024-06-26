@@ -11,11 +11,7 @@ import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
 
-from q2_viromics.virsorter2_fetch_db import (  # Adjust import as necessary
-    create_fetch_db_cmd,
-    delete_directory,
-    virsorter2_fetch_db,
-)
+from q2_viromics.virsorter2_fetch_db import virsorter2_fetch_db, vs2_setup
 
 
 class TestVirsorter2FetchDb(unittest.TestCase):
@@ -31,16 +27,21 @@ class TestVirsorter2FetchDb(unittest.TestCase):
         # Call the function
         result = virsorter2_fetch_db(n_jobs=5)
 
-        # Check if create_fetch_db_cmd was called correctly
-        expected_cmd = create_fetch_db_cmd(mock_database, 5)
+        # Check if vs2_setup was called correctly
+        expected_cmd = [
+            "virsorter",
+            "setup",
+            "-d",
+            str(mock_database),
+            "-s",
+            "-j",
+            "5",
+        ]
         mock_run_command.assert_called_once_with(expected_cmd)
 
         # Check if directories are deleted
-        mock_database_path = str(mock_database.path)
-        expected_snakemake_path = os.path.join(mock_database_path, ".snakemake")
-        expected_conda_envs_path = os.path.join(mock_database_path, "conda_envs")
-        self.assertFalse(os.path.exists(expected_snakemake_path))
-        self.assertFalse(os.path.exists(expected_conda_envs_path))
+        self.assertFalse(os.path.exists(".snakemake"))
+        self.assertFalse(os.path.exists("conda_envs"))
 
         # Check the return value
         self.assertEqual(result, mock_database)
@@ -66,38 +67,46 @@ class TestVirsorter2FetchDb(unittest.TestCase):
             in str(context.exception)
         )
 
-    @patch("q2_viromics.virsorter2_fetch_db.os.path.exists", return_value=True)
-    @patch("q2_viromics.virsorter2_fetch_db.shutil.rmtree")
-    def test_delete_directory(self, mock_rmtree, mock_exists):
-        # Call the function
-        delete_directory("/fake/path")
-
-        # Check if shutil.rmtree was called
-        mock_rmtree.assert_called_once_with("/fake/path")
-
-    @patch("q2_viromics.virsorter2_fetch_db.os.path.exists", return_value=False)
-    @patch("q2_viromics.virsorter2_fetch_db.shutil.rmtree")
-    def test_delete_directory_not_exists(self, mock_rmtree, mock_exists):
-        # Call the function
-        delete_directory("/fake/path")
-
-        # Check if shutil.rmtree was not called
-        mock_rmtree.assert_not_called()
-
-    @patch("q2_viromics.virsorter2_fetch_db.Virsorter2DbDirFmt")
-    def test_create_fetch_db_cmd(self, mock_Virsorter2DbDirFmt):
-        # Mock the Virsorter2DbDirFmt instance
+    @patch("q2_viromics.virsorter2_fetch_db.run_command")
+    def test_vs2_setup_success(self, mock_run_command):
+        # Mock the database path
         mock_database = MagicMock()
         mock_database.path = "/fake/path"
 
         # Call the function
-        result = create_fetch_db_cmd(mock_database, n_jobs=5)
+        vs2_setup(mock_database, n_jobs=5)
 
         # Expected command
-        expected_cmd = ["virsorter", "setup", "-d", "/fake/path", "-s", "-j", "5"]
+        expected_cmd = [
+            "virsorter",
+            "setup",
+            "-d",
+            str(mock_database),
+            "-s",
+            "-j",
+            "5",
+        ]
 
-        # Assert the result matches the expected command
-        self.assertEqual(result, expected_cmd)
+        # Assert the command was called
+        mock_run_command.assert_called_once_with(expected_cmd)
+
+    @patch(
+        "q2_viromics.virsorter2_fetch_db.run_command",
+        side_effect=subprocess.CalledProcessError(1, "cmd"),
+    )
+    def test_vs2_setup_failure(self, mock_run_command):
+        # Mock the database path
+        mock_database = MagicMock()
+        mock_database.path = "/fake/path"
+
+        # Call the function and assert it raises an Exception
+        with self.assertRaises(Exception) as context:
+            vs2_setup(mock_database, n_jobs=5)
+
+        self.assertTrue(
+            "An error was encountered while running virsorter2 setup"
+            in str(context.exception)
+        )
 
 
 if __name__ == "__main__":
