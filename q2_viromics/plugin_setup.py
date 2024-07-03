@@ -48,19 +48,19 @@ plugin.register_semantic_types(Virsorter2Db, ViralScore)
 plugin.register_artifact_class(
     Virsorter2Db,
     directory_format=Virsorter2DbDirFmt,
-    description=("Represents a VirSorter2 database."),
+    description=("VirSorter2 database."),
 )
 
 plugin.register_artifact_class(
     FeatureData[ViralScore],
     directory_format=ViralScoreDirFmt,
-    description=("Represents viral score table from VirSorter2."),
+    description=("Viral score table from VirSorter2."),
 )
 
 plugin.register_artifact_class(
     FeatureData[ViralBoundary],
     directory_format=ViralBoundaryDirFmt,
-    description=("Represents viral boundary table from VirSorter2."),
+    description=("Viral boundary table from VirSorter2."),
 )
 
 

@@ -52,16 +52,24 @@ def _virsorter2_analysis(
     viral_sequences = DNAFASTAFormat()
 
     with tempfile.TemporaryDirectory() as tmp:
+        # Execute the "virsorter2 run" command
         vs2_run_execution(tmp, sequences, database, n_jobs)
 
-        viral_combined_path = os.path.join(tmp, "final-viral-combined.fa")
-        shutil.copy(viral_combined_path, os.path.join(str(viral_sequences)))
+        # Copy the combined viral sequences file
+        shutil.copy(
+            os.path.join(tmp, "final-viral-combined.fa"),
+            os.path.join(str(viral_sequences)),
+        )
 
-        viral_score_fp = os.path.join(tmp, "final-viral-score.tsv")
-        viral_score_df = pd.read_csv(viral_score_fp, sep="\t")
+        # Read the viral score file into a DataFrame
+        viral_score_df = pd.read_csv(
+            os.path.join(tmp, "final-viral-score.tsv"), sep="\t"
+        )
 
-        viral_boundary_fp = os.path.join(tmp, "final-viral-boundary.tsv")
-        viral_boundary_df = pd.read_csv(viral_boundary_fp, sep="\t")
+        # Read the viral boundary file into a DataFrame
+        viral_boundary_df = pd.read_csv(
+            os.path.join(tmp, "final-viral-boundary.tsv"), sep="\t"
+        )
 
     return (viral_sequences, viral_score_df, viral_boundary_df)
 

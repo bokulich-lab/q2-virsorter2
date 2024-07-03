@@ -17,8 +17,7 @@ from ..plugin_setup import plugin
 @plugin.register_transformer
 def _1(data: pd.DataFrame) -> ViralScoreDirFmt:
     ff = ViralScoreDirFmt()
-    ViralScore_file_path = os.path.join(str(ff), "final-viral-score.tsv")
-    data.to_csv(ViralScore_file_path, sep="\t", index=False)
+    data.to_csv(os.path.join(str(ff), "final-viral-score.tsv"), sep="\t", index=False)
     return ff
 
 
@@ -31,8 +30,9 @@ def _2(data: ViralScoreDirFmt) -> pd.DataFrame:
 @plugin.register_transformer
 def _3(data: pd.DataFrame) -> ViralBoundaryDirFmt:
     ff = ViralBoundaryDirFmt()
-    ViralScore_file_path = os.path.join(str(ff), "final-viral-boundary.tsv")
-    data.to_csv(ViralScore_file_path, sep="\t", index=False)
+    data.to_csv(
+        os.path.join(str(ff), "final-viral-boundary.tsv"), sep="\t", index=False
+    )
     return ff
 
 
