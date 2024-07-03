@@ -5,6 +5,9 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
+import os
+import tempfile
+
 from qiime2.plugin import ValidationError
 from qiime2.plugin.testing import TestPluginBase
 
@@ -15,8 +18,83 @@ from q2_viromics.types._format import (
     HMMFormat,
     RbsCatetoryFormat,
     RbsCatetoryNotesFormat,
+    ViralBoundaryFmt,
+    ViralScoreFmt,
     Virsorter2DbDirFmt,
 )
+
+
+class TestVirsorter2OutFormats(TestPluginBase):
+    package = "q2_viromics.tests"
+
+    def setUp(self):
+        # Set up temporary directory for testing
+        self.temp_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        # Clean up temporary directory
+        self.temp_dir.cleanup()
+
+    def _create_temp_file(self, content):
+        temp_file = os.path.join(self.temp_dir.name, "temp_file.tsv")
+        with open(temp_file, "w") as f:
+            f.write(content)
+        return temp_file
+
+    def test_error_reading_file(self):
+        # Create a malformed file that will cause an error when reading
+        temp_file = self._create_temp_file("not\ta\ttsv\ncontent")
+
+        with self.assertRaisesRegex(ValidationError, "ViralBoundaryFmt"):
+            format = ViralBoundaryFmt(temp_file, mode="r")
+            format.validate()
+
+    def test_file_is_empty(self):
+        # Create an empty file
+        temp_file = self._create_temp_file("")
+
+        with self.assertRaisesRegex(ValidationError, "ViralBoundaryFmt"):
+            format = ViralBoundaryFmt(temp_file, mode="r")
+            format.validate()
+
+    def test_header_mismatch(self):
+        # Create a file with incorrect headers
+        incorrect_headers = "wrong\theaders\tfor\ttest\n"
+        temp_file = self._create_temp_file(incorrect_headers)
+
+        with self.assertRaisesRegex(ValidationError, "ViralBoundaryFmt"):
+            format = ViralBoundaryFmt(temp_file, mode="r")
+            format.validate()
+
+    def test_Virsorter2ViralBoundaryFormat(self):
+        filepath = self.get_data_path("type/vs2_out/final-viral-boundary.tsv")
+        format = ViralBoundaryFmt(filepath, mode="r")
+        format.validate()
+
+    def test_Virsorter2ViralScoreFormat(self):
+        filepath = self.get_data_path("type/vs2_out/final-viral-score.tsv")
+        format = ViralScoreFmt(filepath, mode="r")
+        format.validate()
+
+    def test_validate_numeric_field_invalid_value(self):
+        # Create an instance of ViralBoundaryFmt
+        format = ViralBoundaryFmt(
+            self.get_data_path("type/vs2_out/final-viral-boundary.tsv"), mode="r"
+        )
+
+        # Invalid numeric value test case
+        value = "invalid_number"
+        line_number = 1
+        field_name = "length"
+        field_type = int
+
+        # Use self.assertRaisesRegex to check for the ValidationError
+        with self.assertRaisesRegex(
+            ValidationError,
+            f"Line {line_number}: '{field_name}' field should be a "
+            f"{field_type.__name__}, found '{value}'.",
+        ):
+            format._validate_numeric_field(value, line_number, field_name, field_type)
 
 
 class TestVirsorter2DbFormats(TestPluginBase):
