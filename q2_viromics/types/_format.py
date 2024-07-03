@@ -393,15 +393,3 @@ class Virsorter2DbDirFmt(model.DirectoryFormat):
     @db_files.set_path_maker
     def db_files_path_maker(self, sample_id):
         return "group/{}/{}.db".format(sample_id[0], sample_id[1])
-
-
-ViralScoreFmt
-Virsorter2DbDirFmt
-HMMFormat
-GeneralBinaryFileFormat
-HallmarkGeneListFormat
-RbsCatetoryNotesFormat
-RbsCatetoryFormat
-GeneralTSVFormat
-ViralScoreDirFmt
-ViralScoreFmt
