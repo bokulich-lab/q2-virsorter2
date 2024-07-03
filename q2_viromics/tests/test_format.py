@@ -15,8 +15,24 @@ from q2_viromics.types._format import (
     HMMFormat,
     RbsCatetoryFormat,
     RbsCatetoryNotesFormat,
+    ViralBoundaryFmt,
+    ViralScoreFmt,
     Virsorter2DbDirFmt,
 )
+
+
+class TestVirsorter2OutFormats(TestPluginBase):
+    package = "q2_viromics.tests"
+
+    def test_Virsorter2ViralBoundaryFormat(self):
+        filepath = self.get_data_path("type/vs2_out/final-viral-boundary.tsv")
+        format = ViralBoundaryFmt(filepath, mode="r")
+        format.validate()
+
+    def test_Virsorter2ViralScoreFormat(self):
+        filepath = self.get_data_path("type/vs2_out/final-viral-score.tsv")
+        format = ViralScoreFmt(filepath, mode="r")
+        format.validate()
 
 
 class TestVirsorter2DbFormats(TestPluginBase):

@@ -13,6 +13,191 @@ from qiime2.core.exceptions import ValidationError
 from qiime2.plugin import model
 
 
+class ViralScoreFmt(model.TextFileFormat):
+    def _validate(self, n_records=None):
+        headers = [
+            "seqname",
+            "dsDNAphage",
+            "ssDNA",
+            "max_score",
+            "max_score_group",
+            "length",
+            "hallmark",
+            "viral",
+            "cellular",
+        ]
+
+        try:
+            df = pd.read_csv(str(self), sep="\t")
+        except Exception as e:
+            raise ValidationError(f"Error reading file: {e}")
+
+        if list(df.columns) != headers:
+            raise ValidationError(
+                f"Header mismatch. Expected {headers}, but found {list(df.columns)}."
+            )
+
+        for line_number, row in df.iterrows():
+            self._validate_fields(line_number + 2, row)
+
+    def _validate_fields(self, line_number, row):
+        required_fields = {
+            "seqname": str,
+            "dsDNAphage": float,
+            "ssDNA": float,
+            "max_score": float,
+            "max_score_group": str,
+            "length": int,
+            "hallmark": int,
+            "viral": float,
+            "cellular": float,
+        }
+
+        for field, field_type in required_fields.items():
+            if field not in row:
+                raise ValidationError(f"Line {line_number}: Missing field: {field}")
+
+            value = row[field]
+            if pd.isna(value):
+                if field in ["seqname", "max_score_group"]:
+                    raise ValidationError(
+                        f"Line {line_number}: '{field}' field is empty."
+                    )
+            else:
+                self._validate_field_type(value, line_number, field, field_type)
+
+    def _validate_field_type(self, value, line_number, field_name, field_type):
+        try:
+            field_type(value)
+        except ValueError:
+            raise ValidationError(
+                f"Line {line_number}: '{field_name}' field should be "
+                f"{field_type.__name__}, found '{value}'."
+            )
+
+    def _validate_(self, level):
+        self._validate()
+
+
+ViralScoreDirFmt = model.SingleFileDirectoryFormat(
+    "ViralScoreDirFmt", "final-viral-score.tsv", ViralScoreFmt
+)
+
+
+class ViralBoundaryFmt(model.TextFileFormat):
+    def _validate(self, n_records=None):
+        headers = [
+            "seqname",
+            "trim_orf_index_start",
+            "trim_orf_index_end",
+            "trim_bp_start",
+            "trim_bp_end",
+            "trim_pr",
+            "trim_pr_max",
+            "prox_orf_index_start",
+            "prox_orf_index_end",
+            "prox_bp_start",
+            "prox_bp_end",
+            "prox_pr",
+            "prox_pr_max",
+            "partial",
+            "full_orf_index_start",
+            "full_orf_index_end",
+            "full_bp_start",
+            "full_bp_end",
+            "pr_full",
+            "arc",
+            "bac",
+            "euk",
+            "vir",
+            "mix",
+            "unaligned",
+            "hallmark_cnt",
+            "group",
+            "shape",
+            "seqname_new",
+            "final_max_score",
+            "final_max_score_group",
+        ]
+
+        try:
+            df = pd.read_csv(str(self), sep="\t")
+        except Exception as e:
+            raise ValidationError(f"Error reading file: {e}")
+
+        if df.empty:
+            raise ValidationError("File is empty.")
+
+        if list(df.columns) != headers:
+            raise ValidationError(
+                f"Header mismatch. Expected {headers}, but found {list(df.columns)}."
+            )
+
+        for line_number, row in df.iterrows():
+            self._validate_fields(line_number + 2, row)
+
+    def _validate_fields(self, line_number, fields):
+        required_fields = ["seqname", "seqname_new", "final_max_score_group"]
+        int_fields = [
+            "trim_orf_index_start",
+            "trim_orf_index_end",
+            "trim_bp_start",
+            "trim_bp_end",
+            "prox_orf_index_start",
+            "prox_orf_index_end",
+            "prox_bp_start",
+            "prox_bp_end",
+            "partial",
+            "full_orf_index_start",
+            "full_orf_index_end",
+            "full_bp_start",
+            "full_bp_end",
+            "hallmark_cnt",
+        ]
+        float_fields = [
+            "trim_pr",
+            "trim_pr_max",
+            "prox_pr",
+            "prox_pr_max",
+            "pr_full",
+            "arc",
+            "bac",
+            "euk",
+            "vir",
+            "mix",
+            "unaligned",
+            "final_max_score",
+        ]
+
+        for field in required_fields:
+            if pd.isna(fields[field]):
+                raise ValidationError(f"Line {line_number}: '{field}' field is empty.")
+
+        for field in int_fields:
+            self._validate_numeric_field(fields[field], line_number, field, int)
+
+        for field in float_fields:
+            self._validate_numeric_field(fields[field], line_number, field, float)
+
+    def _validate_numeric_field(self, value, line_number, field_name, field_type):
+        if pd.notna(value):
+            try:
+                field_type(value)
+            except ValueError:
+                raise ValidationError(
+                    f"Line {line_number}: '{field_name}' field should be a "
+                    f"{field_type.__name__}, found '{value}'."
+                )
+
+    def _validate_(self, level):
+        self._validate()
+
+
+ViralBoundaryDirFmt = model.SingleFileDirectoryFormat(
+    "ViralBoundaryDirFmt", "final-viral-boundary.tsv", ViralBoundaryFmt
+)
+
+
 # Format for validating general TSV files
 class GeneralTSVFormat(model.TextFileFormat):
     def _validate_(self, level):
@@ -208,3 +393,15 @@ class Virsorter2DbDirFmt(model.DirectoryFormat):
     @db_files.set_path_maker
     def db_files_path_maker(self, sample_id):
         return "group/{}/{}.db".format(sample_id[0], sample_id[1])
+
+
+ViralScoreFmt
+Virsorter2DbDirFmt
+HMMFormat
+GeneralBinaryFileFormat
+HallmarkGeneListFormat
+RbsCatetoryNotesFormat
+RbsCatetoryFormat
+GeneralTSVFormat
+ViralScoreDirFmt
+ViralScoreFmt

@@ -8,6 +8,7 @@
 
 import os
 import subprocess
+import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -107,6 +108,34 @@ class TestVirsorter2FetchDb(unittest.TestCase):
             "An error was encountered while running virsorter2 setup"
             in str(context.exception)
         )
+
+    @patch("q2_viromics.virsorter2_fetch_db.Virsorter2DbDirFmt")
+    @patch("q2_viromics.virsorter2_fetch_db.vs2_setup")
+    @patch("q2_viromics.virsorter2_fetch_db.os.path.exists", return_value=True)
+    @patch("q2_viromics.virsorter2_fetch_db.shutil.rmtree")
+    def test_virsorter2_fetch_db_directory_exists(
+        self, mock_rmtree, mock_exists, mock_vs2_setup, mock_Virsorter2DbDirFmt
+    ):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            # Mock the Virsorter2DbDirFmt instance
+            mock_database = MagicMock()
+            mock_Virsorter2DbDirFmt.return_value = mock_database
+            mock_database.path = temp_dir
+
+            # Create dummy directories to simulate existence
+            os.makedirs(os.path.join(temp_dir, ".snakemake"))
+            os.makedirs(os.path.join(temp_dir, "conda_envs"))
+
+            # Call the function
+            result = virsorter2_fetch_db(n_jobs=5)
+            mock_vs2_setup.assert_called_once_with(mock_database, 5)
+
+            # Check if directories are deleted
+            mock_rmtree.assert_any_call(os.path.join(temp_dir, ".snakemake"))
+            mock_rmtree.assert_any_call(os.path.join(temp_dir, "conda_envs"))
+
+            # Check the return value
+            self.assertEqual(result, mock_database)
 
 
 if __name__ == "__main__":
