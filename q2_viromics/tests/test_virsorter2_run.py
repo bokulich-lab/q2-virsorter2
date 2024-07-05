@@ -32,7 +32,14 @@ class TestVirsorter2Run(unittest.TestCase):
         mock_database.path = "/fake/database"
 
         # Call the function
-        vs2_run_execution(mock_tmp, mock_sequences, mock_database, n_jobs=5)
+        vs2_run_execution(
+            mock_tmp,
+            mock_sequences,
+            mock_database,
+            n_jobs=5,
+            min_score=0.5,
+            min_length=0,
+        )
 
         # Expected command
         expected_cmd = [
@@ -46,6 +53,10 @@ class TestVirsorter2Run(unittest.TestCase):
             mock_sequences.path,
             "-j",
             "5",
+            "--min-score",
+            "0.5",
+            "--min-length",
+            "0",
             "--use-conda-off",
         ]
 
@@ -66,7 +77,14 @@ class TestVirsorter2Run(unittest.TestCase):
 
         # Call the function and assert it raises an Exception
         with self.assertRaises(Exception) as context:
-            vs2_run_execution(mock_tmp, mock_sequences, mock_database, n_jobs=5)
+            vs2_run_execution(
+                mock_tmp,
+                mock_sequences,
+                mock_database,
+                n_jobs=5,
+                min_score=0.5,
+                min_length=0,
+            )
 
         self.assertTrue(
             "An error was encountered while running virsorter2 run"
@@ -101,11 +119,13 @@ class TestVirsorter2Run(unittest.TestCase):
         mock_database.path = "/fake/database"
 
         # Call the function
-        result = run(mock_sequences, mock_database, n_jobs=5)
+        result = run(
+            mock_sequences, mock_database, n_jobs=5, min_score=0.5, min_length=0
+        )
 
         # Assertions
         mock_vs2_run_execution.assert_called_once_with(
-            "/fake/tmp", mock_sequences, mock_database, 5
+            "/fake/tmp", mock_sequences, mock_database, 5, 0.5, 0
         )
         mock_shutil_copy.assert_called_once_with(
             "/fake/tmp/final-viral-combined.fa", str(result[0])
