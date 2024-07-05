@@ -12,13 +12,9 @@ from ._format import (
     HMMFormat,
     RbsCatetoryFormat,
     RbsCatetoryNotesFormat,
-    ViralBoundaryDirFmt,
-    ViralBoundaryFmt,
-    ViralScoreDirFmt,
-    ViralScoreFmt,
     Virsorter2DbDirFmt,
 )
-from ._type import ViralBoundary, ViralScore, Virsorter2Db
+from ._type import Virsorter2Db
 
 __all__ = [
     "Virsorter2Db",
@@ -31,9 +27,4 @@ __all__ = [
     "RbsCatetoryNotesFormat",
     "RbsCatetoryFormat",
     "GeneralTSVFormat",
-    "ViralScoreDirFmt",
-    "ViralScoreFmt",
-    "ViralBoundaryDirFmt",
-    "ViralBoundaryFmt",
-    "ViralBoundary",
 ]

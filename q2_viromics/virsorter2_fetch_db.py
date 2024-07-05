@@ -37,7 +37,7 @@ def vs2_setup(database, n_jobs):
 
 
 # Fetch the Virsorter2 database
-def virsorter2_fetch_db(n_jobs: int = 10) -> Virsorter2DbDirFmt:
+def fetch_db(n_jobs: int = 10) -> Virsorter2DbDirFmt:
     # Initialize a directory format object to store the Minimap2 index
     database = Virsorter2DbDirFmt()
 

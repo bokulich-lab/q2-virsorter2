@@ -12,7 +12,7 @@ import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
-from q2_viromics.virsorter2_fetch_db import virsorter2_fetch_db, vs2_setup
+from q2_viromics.virsorter2_fetch_db import fetch_db, vs2_setup
 
 
 class TestVirsorter2FetchDb(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestVirsorter2FetchDb(unittest.TestCase):
         mock_Virsorter2DbDirFmt.return_value = mock_database
 
         # Call the function
-        result = virsorter2_fetch_db(n_jobs=5)
+        result = fetch_db(n_jobs=5)
 
         # Check if vs2_setup was called correctly
         expected_cmd = [
@@ -61,7 +61,7 @@ class TestVirsorter2FetchDb(unittest.TestCase):
 
         # Call the function and assert it raises an Exception
         with self.assertRaises(Exception) as context:
-            virsorter2_fetch_db(n_jobs=5)
+            fetch_db(n_jobs=5)
 
         self.assertTrue(
             "An error was encountered while running virsorter2 setup"
@@ -127,7 +127,7 @@ class TestVirsorter2FetchDb(unittest.TestCase):
             os.makedirs(os.path.join(temp_dir, "conda_envs"))
 
             # Call the function
-            result = virsorter2_fetch_db(n_jobs=5)
+            result = fetch_db(n_jobs=5)
             mock_vs2_setup.assert_called_once_with(mock_database, 5)
 
             # Check if directories are deleted

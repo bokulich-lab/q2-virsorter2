@@ -11,6 +11,7 @@ import subprocess
 import tempfile
 
 import pandas as pd
+import qiime2
 from q2_types.feature_data import DNAFASTAFormat
 
 from q2_viromics._utils import run_command
@@ -18,7 +19,7 @@ from q2_viromics.types._format import Virsorter2DbDirFmt
 
 
 # Create the command to fetch the Virsorter2 database
-def vs2_run_execution(tmp, sequences, database, n_jobs):
+def vs2_run_execution(tmp, sequences, database, n_jobs, min_score, min_length):
     cmd = [
         "virsorter",
         "run",
@@ -30,6 +31,10 @@ def vs2_run_execution(tmp, sequences, database, n_jobs):
         str(sequences.path),
         "-j",
         str(n_jobs),
+        "--min-score",
+        str(min_score),
+        "--min-length",
+        str(min_length),
         "--use-conda-off",
     ]
 
@@ -43,17 +48,19 @@ def vs2_run_execution(tmp, sequences, database, n_jobs):
         )
 
 
-def _virsorter2_analysis(
+def run(
     sequences: DNAFASTAFormat,
     database: Virsorter2DbDirFmt,
     n_jobs: int = 10,
-) -> (DNAFASTAFormat, pd.DataFrame, pd.DataFrame):
+    min_score: float = 0.5,
+    min_length: int = 0,
+) -> (DNAFASTAFormat, qiime2.Metadata, qiime2.Metadata):
 
     viral_sequences = DNAFASTAFormat()
 
     with tempfile.TemporaryDirectory() as tmp:
         # Execute the "virsorter2 run" command
-        vs2_run_execution(tmp, sequences, database, n_jobs)
+        vs2_run_execution(tmp, sequences, database, n_jobs, min_score, min_length)
 
         # Copy the combined viral sequences file
         shutil.copy(
@@ -63,26 +70,18 @@ def _virsorter2_analysis(
 
         # Read the viral score file into a DataFrame
         viral_score_df = pd.read_csv(
-            os.path.join(tmp, "final-viral-score.tsv"), sep="\t"
+            os.path.join(tmp, "final-viral-score.tsv"), sep="\t", index_col=0
         )
+        viral_score_df.index.name = "sample_name"
 
         # Read the viral boundary file into a DataFrame
         viral_boundary_df = pd.read_csv(
-            os.path.join(tmp, "final-viral-boundary.tsv"), sep="\t"
+            os.path.join(tmp, "final-viral-boundary.tsv"), sep="\t", index_col=0
         )
+        viral_boundary_df.index.name = "sample_name"
 
-    return (viral_sequences, viral_score_df, viral_boundary_df)
-
-
-def virsorter2_run(
-    ctx,
-    sequences,
-    database,
-    n_jobs=10,
-):
-    vs2_analysis = ctx.get_action("viromics", "_virsorter2_analysis")
-    (viral_sequences, viral_score_table, viral_boundary_table) = vs2_analysis(
-        sequences=sequences, database=database, n_jobs=n_jobs
+    return (
+        viral_sequences,
+        qiime2.Metadata(viral_score_df),
+        qiime2.Metadata(viral_boundary_df),
     )
-
-    return viral_sequences, viral_score_table, viral_boundary_table
