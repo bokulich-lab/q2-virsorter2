@@ -10,21 +10,21 @@ from q2_types.feature_data import FeatureData, Sequence
 from q2_types.metadata import ImmutableMetadata
 from qiime2.plugin import Citations, Float, Int, Plugin, Range
 
-from q2_viromics import __version__
-from q2_viromics.types._format import Virsorter2DbDirFmt
-from q2_viromics.types._type import Virsorter2Db
-from q2_viromics.virsorter2_fetch_db import fetch_db
-from q2_viromics.virsorter2_run import run
+from q2_virsorter2 import __version__
+from q2_virsorter2.types._format import Virsorter2DbDirFmt
+from q2_virsorter2.types._type import Virsorter2Db
+from q2_virsorter2.virsorter2_fetch_db import fetch_db
+from q2_virsorter2.virsorter2_run import run
 
-citations = Citations.load("citations.bib", package="q2_viromics")
+citations = Citations.load("citations.bib", package="q2_virsorter2")
 
 plugin = Plugin(
-    name="viromics",
+    name="virsorter2",
     version=__version__,
-    website="https://github.com/bokulich-lab/q2-viromics",
-    package="q2_viromics",
-    description="A QIIME 2 plugin for viromics analysis.",
-    short_description="A QIIME 2 plugin for viromics analysis.",
+    website="https://github.com/bokulich-lab/q2-virsorter2",
+    package="q2_virsorter2",
+    description="A QIIME 2 plugin for virsorter2 analysis.",
+    short_description="A QIIME 2 plugin for virsorter2 analysis.",
     citations=[citations["Caporaso-Bolyen-2024"]],
 )
 

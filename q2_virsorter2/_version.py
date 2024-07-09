@@ -52,8 +52,8 @@ def get_config() -> VersioneerConfig:
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = ""
-    cfg.parentdir_prefix = "q2-viromics-"
-    cfg.versionfile_source = "q2_viromics/_version.py"
+    cfg.parentdir_prefix = "q2-virsorter2-"
+    cfg.versionfile_source = "q2_virsorter2/_version.py"
     cfg.verbose = False
     return cfg
 
