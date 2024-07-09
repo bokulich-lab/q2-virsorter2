@@ -6,22 +6,15 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import importlib
-
 from q2_types.feature_data import FeatureData, Sequence
-from qiime2.plugin import Citations, Int, Plugin, Range
+from q2_types.metadata import ImmutableMetadata
+from qiime2.plugin import Citations, Float, Int, Plugin, Range
 
 from q2_viromics import __version__
-from q2_viromics.types._format import (
-    ViralBoundaryDirFmt,
-    ViralBoundaryFmt,
-    ViralScoreDirFmt,
-    ViralScoreFmt,
-    Virsorter2DbDirFmt,
-)
-from q2_viromics.types._type import ViralBoundary, ViralScore, Virsorter2Db
-from q2_viromics.virsorter2_fetch_db import virsorter2_fetch_db
-from q2_viromics.virsorter2_run import _virsorter2_analysis, virsorter2_run
+from q2_viromics.types._format import Virsorter2DbDirFmt
+from q2_viromics.types._type import Virsorter2Db
+from q2_viromics.virsorter2_fetch_db import fetch_db
+from q2_viromics.virsorter2_run import run
 
 citations = Citations.load("citations.bib", package="q2_viromics")
 
@@ -37,13 +30,9 @@ plugin = Plugin(
 
 plugin.register_formats(
     Virsorter2DbDirFmt,
-    ViralScoreFmt,
-    ViralScoreDirFmt,
-    ViralBoundaryFmt,
-    ViralBoundaryDirFmt,
 )
 
-plugin.register_semantic_types(Virsorter2Db, ViralScore)
+plugin.register_semantic_types(Virsorter2Db)
 
 plugin.register_artifact_class(
     Virsorter2Db,
@@ -51,21 +40,8 @@ plugin.register_artifact_class(
     description=("VirSorter2 database."),
 )
 
-plugin.register_artifact_class(
-    FeatureData[ViralScore],
-    directory_format=ViralScoreDirFmt,
-    description=("Viral score table from VirSorter2."),
-)
-
-plugin.register_artifact_class(
-    FeatureData[ViralBoundary],
-    directory_format=ViralBoundaryDirFmt,
-    description=("Viral boundary table from VirSorter2."),
-)
-
-
 plugin.methods.register_function(
-    function=virsorter2_fetch_db,
+    function=fetch_db,
     inputs={},
     parameters={
         "n_jobs": Int % Range(1, None),
@@ -75,23 +51,26 @@ plugin.methods.register_function(
         "n_jobs": "Number of simultaneous downloads.",
     },
     output_descriptions={"database": "Virsorter2 database."},
-    name="Fetch virsorter2 database.",
+    name="Fetch virsorter2 database",
     description=(
         "Fetch a Virsorter2 database that includes a collection "
         "of known viral genomes and key genes that are typically "
         "found in viral genomes."
     ),
-    citations=[],
+    citations=[citations["VirSorter2"]],
 )
 
-
-plugin.pipelines.register_function(
-    function=virsorter2_run,
+plugin.methods.register_function(
+    function=run,
     inputs={
         "sequences": FeatureData[Sequence],
         "database": Virsorter2Db,
     },
-    parameters={"n_jobs": Int % Range(1, None)},
+    parameters={
+        "n_jobs": Int % Range(1, None),
+        "min_score": Float % Range(0, 1),
+        "min_length": Int % Range(0, None),
+    },
     input_descriptions={
         "sequences": "Input sequences from an assembly or genome "
         "data for virus detection.",
@@ -99,52 +78,24 @@ plugin.pipelines.register_function(
     },
     parameter_descriptions={
         "n_jobs": "Max number of jobs allowed in parallel.",
+        "min_score": "Minimal score to be identified as viral.",
+        "min_length": "Minimal sequence length required. All sequences "
+        "shorter than this will "
+        "be removed.",
     },
     outputs=[
         ("viral_sequences", FeatureData[Sequence]),
-        ("viral_score", FeatureData[ViralScore]),
-        ("viral_boundary", FeatureData[ViralBoundary]),
+        ("viral_score", ImmutableMetadata),
+        ("viral_boundary", ImmutableMetadata),
     ],
     output_descriptions={
         "viral_sequences": "Identified viral sequences.",
         "viral_score": "Viral score table.",
         "viral_boundary": "Viral boundary table.",
     },
-    name="Identifying and vizualize statistics for viral sequences.",
+    name="Identify viral sequences and produce corresponding metadata",
     description="Performs analysis for identifying and categorizing viral "
     "sequences from metagenomic data using VirSorter2 and provides "
-    "useful visualizations.",
-    citations=[],
+    "corresponding metadata data.",
+    citations=[citations["VirSorter2"]],
 )
-
-plugin.methods.register_function(
-    function=_virsorter2_analysis,
-    inputs={
-        "sequences": FeatureData[Sequence],
-        "database": Virsorter2Db,
-    },
-    parameters={"n_jobs": Int % Range(1, None)},
-    input_descriptions={
-        "sequences": "Input sequences from an assembly or genome "
-        "data for virus detection.",
-        "database": "VirSorter2 database.",
-    },
-    parameter_descriptions={"n_jobs": "Max number of jobs allowed in parallel."},
-    outputs=[
-        ("viral_sequences", FeatureData[Sequence]),
-        ("viral_score", FeatureData[ViralScore]),
-        ("viral_boundary", FeatureData[ViralBoundary]),
-    ],
-    output_descriptions={
-        "viral_sequences": "Identified viral sequences.",
-        "viral_score": "Viral score table.",
-        "viral_boundary": "Viral boundary table.",
-    },
-    name="Identifying and vizualize statistics for viral sequences.",
-    description="Performs analysis for identifying and categorizing viral "
-    "sequences from metagenomic data using VirSorter2 and provides "
-    "useful visualizations.",
-    citations=[],
-)
-
-importlib.import_module("q2_viromics.types._transformer")
