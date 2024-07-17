@@ -2,7 +2,7 @@
 {% set version = data.get('version') or 'placehold' %}
 
 package:
-  name: q2-viromics
+  name: q2-virsorter2
   version: {{ version }}
 
 source:
@@ -28,12 +28,12 @@ test:
     - coverage
     - pytest-cov
   imports:
-    - q2_viromics
-    - qiime2.plugins.viromics
+    - q2_virsorter2
+    - qiime2.plugins.virsorter2
   commands:
-    - pytest --cov q2_viromics --cov-report xml:coverage.xml --pyargs q2_viromics
+    - pytest --cov q2_virsorter2 --cov-report xml:coverage.xml --pyargs q2_virsorter2
 
 about:
-  home: https://github.com/bokulich-lab/q2-viromics
+  home: https://github.com/bokulich-lab/q2-virsorter2
   license: BSD-3-Clause
   license_family: BSD
