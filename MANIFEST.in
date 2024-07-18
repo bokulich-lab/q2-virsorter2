@@ -1,2 +1,2 @@
 include versioneer.py
-include q2_viromics/_version.py
+include q2_virsorter2/_version.py

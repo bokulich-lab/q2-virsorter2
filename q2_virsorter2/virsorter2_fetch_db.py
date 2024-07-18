@@ -9,8 +9,8 @@ import os
 import shutil
 import subprocess
 
-from q2_viromics._utils import run_command
-from q2_viromics.types._format import Virsorter2DbDirFmt
+from q2_virsorter2._utils import run_command
+from q2_virsorter2.types._format import Virsorter2DbDirFmt
 
 
 # Create the command to fetch the Virsorter2 database
