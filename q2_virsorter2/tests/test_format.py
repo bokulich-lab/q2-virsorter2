@@ -8,7 +8,7 @@
 from qiime2.plugin import ValidationError
 from qiime2.plugin.testing import TestPluginBase
 
-from q2_viromics.types._format import (
+from q2_virsorter2.types._format import (
     GeneralBinaryFileFormat,
     GeneralTSVFormat,
     HallmarkGeneListFormat,

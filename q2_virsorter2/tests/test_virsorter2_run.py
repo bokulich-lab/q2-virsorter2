@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 import pandas as pd
 import qiime2
 
-from q2_viromics.virsorter2_run import run, vs2_run_execution
+from q2_virsorter2.virsorter2_run import run, vs2_run_execution
 
 
 class TestVirsorter2Run(unittest.TestCase):

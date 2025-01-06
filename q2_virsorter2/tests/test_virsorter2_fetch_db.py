@@ -12,7 +12,7 @@ import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
-from q2_viromics.virsorter2_fetch_db import fetch_db, vs2_setup
+from q2_virsorter2.virsorter2_fetch_db import fetch_db, vs2_setup
 
 
 class TestVirsorter2FetchDb(unittest.TestCase):
