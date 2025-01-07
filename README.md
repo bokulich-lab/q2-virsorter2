@@ -1,44 +1,20 @@
-# q2-viromics
+# q2-virsorter2
 
-A [QIIME 2](https://qiime2.org) Plugin for Viromics Identification and Analysis.
+A [QIIME 2](https://qiime2.org) Plugin for detection and analysis of viral genomes using VirSorter 2.
 
-## Installation instructions
+## Installation
+_q2-virsorter2_ is available as part of the QIIME 2 pathogenome distribution. For installation and usage instructions please consult the official [QIIME 2 documentation](https://docs.qiime2.org). 
 
-### Install Prerequisites
 
-[Miniconda](https://conda.io/miniconda.html) provides the `conda` environment and package manager, and is currently the only supported way to install QIIME 2.
-Follow the instructions for downloading and installing Miniconda.
+## Usage
+Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/Doa1ePP5IB7QRhI).
 
-After installing Miniconda and opening a new terminal, make sure you're running the latest version of `conda`:
-
+Fetch the VirSorter database:
 ```bash
-conda update conda
+qiime virsorter2 fetch-db --o-database db.qza --verbose
 ```
 
-###  Install development version of `q2-viromics`
-Clone the repository:
-```shell
-git clone https://github.com/bokulich-lab/q2-viromics.git
-cd q2-viromics
-```
-
-Then, run:
-
-```shell
-mamba create -n q2-viromics2 -c conda-forge -c bioconda -c https://packages.qiime2.org/qiime2/2023.7/core/passed/  -c defaults q2-types numpy=1.23.5 q2cli virsorter=2 "python=3.8" scikit-learn=0.22.1 pandas seaborn hmmer==3.3 prodigal=2.6 screed=1 ruamel.yaml click pip last ncbi-genome-download checkv pyhmmer
-```
-
-After this completes, activate the new environment you created by running:
-
-```shell
-conda activate q2-viromics
-```
-
-```shell
-make install
-```
-
-```shell
-make dev
-qiime dev refresh-cache
+Run the CheckV analysis:
+```bash
+qiime virsorter2 run --i-database db.qza --i-sequences input.qza --output-dir results/ --verbose
 ```
