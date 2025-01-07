@@ -1,5 +1,5 @@
 package:
-  name: q2-viromics
+  name: q2-virsorter2
   version: {{ PLUGIN_VERSION }}
 
 source:
