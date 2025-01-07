@@ -48,3 +48,7 @@ include = ["q2_virsorter2*"]
 
 [tool.setuptools.package-data]
 q2_virsorter2 = ["**/*"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = "E203"
