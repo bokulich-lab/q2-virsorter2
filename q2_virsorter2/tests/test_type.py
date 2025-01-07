@@ -11,7 +11,7 @@ from q2_virsorter2.types._type import Virsorter2Db
 
 
 class TestVirsorter2DbType(TestPluginBase):
-    package = "q2_viromics.tests"
+    package = "q2_virsorter2.tests"
 
     def test_Virsorter2Db_registration(self):
         self.assertRegisteredSemanticType(Virsorter2Db)

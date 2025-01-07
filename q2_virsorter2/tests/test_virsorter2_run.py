@@ -18,9 +18,9 @@ from q2_virsorter2.virsorter2_run import run, vs2_run_execution
 
 
 class TestVirsorter2Run(unittest.TestCase):
-    @patch("q2_viromics.virsorter2_run.run_command")
-    @patch("q2_viromics.virsorter2_run.DNAFASTAFormat")
-    @patch("q2_viromics.virsorter2_run.Virsorter2DbDirFmt")
+    @patch("q2_virsorter2.virsorter2_run.run_command")
+    @patch("q2_virsorter2.virsorter2_run.DNAFASTAFormat")
+    @patch("q2_virsorter2.virsorter2_run.Virsorter2DbDirFmt")
     def test_vs2_run_execution_success(
         self, mock_Virsorter2DbDirFmt, mock_DNAFASTAFormat, mock_run_command
     ):
@@ -64,7 +64,7 @@ class TestVirsorter2Run(unittest.TestCase):
         mock_run_command.assert_called_once_with(expected_cmd)
 
     @patch(
-        "q2_viromics.virsorter2_run.run_command",
+        "q2_virsorter2.virsorter2_run.run_command",
         side_effect=subprocess.CalledProcessError(1, "cmd"),
     )
     def test_vs2_run_execution_failure(self, mock_run_command):
@@ -91,9 +91,9 @@ class TestVirsorter2Run(unittest.TestCase):
             in str(context.exception)
         )
 
-    @patch("q2_viromics.virsorter2_run.vs2_run_execution")
-    @patch("q2_viromics.virsorter2_run.DNAFASTAFormat")
-    @patch("q2_viromics.virsorter2_run.pd.read_csv")
+    @patch("q2_virsorter2.virsorter2_run.vs2_run_execution")
+    @patch("q2_virsorter2.virsorter2_run.DNAFASTAFormat")
+    @patch("q2_virsorter2.virsorter2_run.pd.read_csv")
     @patch("shutil.copy")
     @patch("tempfile.TemporaryDirectory")
     def test_run_success(
