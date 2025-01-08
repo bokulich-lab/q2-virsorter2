@@ -11,7 +11,10 @@ build:
 requirements:
   host:
     - python {{ python }}
+    - pip
     - setuptools
+    - versioningit
+    - wheel
 
   run:
     - python {{ python }}
@@ -21,6 +24,9 @@ requirements:
     - pyhmmer
     - screed
     - virsorter=2
+  build:
+    - setuptools
+    - versioningit
 
 test:
   imports:
