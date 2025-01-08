@@ -26,7 +26,7 @@ qiime dev refresh-cache
 ```
 
 ## Usage
-Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/Doa1ePP5IB7QRhI).
+Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/BpFdP8bC9lcs7YW).
 
 Fetch the VirSorter database:
 ```bash
@@ -35,5 +35,5 @@ qiime virsorter2 fetch-db --o-database db.qza --verbose
 
 Run the CheckV analysis:
 ```bash
-qiime virsorter2 run --i-database db.qza --i-sequences input.qza --output-dir results/ --verbose
+qiime virsorter2 run --i-database db.qza --i-sequences input_sequences.qza --output-dir results/ --verbose
 ```
