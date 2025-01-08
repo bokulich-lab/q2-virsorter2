@@ -3,8 +3,27 @@
 A [QIIME 2](https://qiime2.org) Plugin for detection and analysis of viral genomes using VirSorter 2.
 
 ## Installation
-_q2-virsorter2_ is available as part of the QIIME 2 pathogenome distribution. For installation and usage instructions please consult the official [QIIME 2 documentation](https://docs.qiime2.org). 
+_q2-virsorter2_ can be installed into an existing QIIME 2 conda environment. The plugin should be compatible with the 
+[metagenome](https://docs.qiime2.org/2024.10/install/native/#qiime-2-metagenome-distribution), 
+[pathogenome](https://docs.qiime2.org/2024.10/install/native/#qiime-2-pathogenome-distribution), 
+and [amplicon](https://docs.qiime2.org/2024.10/install/native/#qiime-2-amplicon-distribution) QIIME 2 distributions.
 
+
+```shell
+conda activate <environment name>
+```
+
+```shell
+mamba install -c conda-forge -c bioconda -c defaults prodigal pyhmmer screed virsorter=2
+```
+
+```shell
+pip install git+https://github.com/bokulich-lab/q2-virsorter2.git
+```
+
+```shell
+qiime dev refresh-cache
+```
 
 ## Usage
 Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/Doa1ePP5IB7QRhI).

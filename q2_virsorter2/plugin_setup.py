@@ -51,7 +51,7 @@ plugin.methods.register_function(
         "n_jobs": "Number of simultaneous downloads.",
     },
     output_descriptions={"database": "Virsorter2 database."},
-    name="Fetch virsorter2 database",
+    name="Fetch virsorter2 database.",
     description=(
         "Fetch a Virsorter2 database that includes a collection "
         "of known viral genomes and key genes that are typically "
@@ -92,7 +92,7 @@ plugin.methods.register_function(
         "viral_score": "Viral score table.",
         "viral_boundary": "Viral boundary table.",
     },
-    name="Identify viral sequences and produce corresponding metadata",
+    name="Identify viral sequences and produce corresponding metadata.",
     description="Performs analysis for identifying and categorizing viral "
     "sequences from metagenomic data using VirSorter2 and provides "
     "corresponding metadata data.",
