@@ -10,7 +10,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from q2_viromics._utils import (
+from q2_virsorter2._utils import (
     _construct_param,
     _get_sample_from_path,
     _process_common_input_params,

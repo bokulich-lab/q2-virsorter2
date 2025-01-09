@@ -12,12 +12,12 @@ import tempfile
 import unittest
 from unittest.mock import MagicMock, patch
 
-from q2_viromics.virsorter2_fetch_db import fetch_db, vs2_setup
+from q2_virsorter2.virsorter2_fetch_db import fetch_db, vs2_setup
 
 
 class TestVirsorter2FetchDb(unittest.TestCase):
-    @patch("q2_viromics.virsorter2_fetch_db.run_command")
-    @patch("q2_viromics.virsorter2_fetch_db.Virsorter2DbDirFmt")
+    @patch("q2_virsorter2.virsorter2_fetch_db.run_command")
+    @patch("q2_virsorter2.virsorter2_fetch_db.Virsorter2DbDirFmt")
     def test_virsorter2_fetch_db_success(
         self, mock_Virsorter2DbDirFmt, mock_run_command
     ):
@@ -48,10 +48,10 @@ class TestVirsorter2FetchDb(unittest.TestCase):
         self.assertEqual(result, mock_database)
 
     @patch(
-        "q2_viromics.virsorter2_fetch_db.run_command",
+        "q2_virsorter2.virsorter2_fetch_db.run_command",
         side_effect=subprocess.CalledProcessError(1, "cmd"),
     )
-    @patch("q2_viromics.virsorter2_fetch_db.Virsorter2DbDirFmt")
+    @patch("q2_virsorter2.virsorter2_fetch_db.Virsorter2DbDirFmt")
     def test_virsorter2_fetch_db_failure(
         self, mock_Virsorter2DbDirFmt, mock_run_command
     ):
@@ -68,7 +68,7 @@ class TestVirsorter2FetchDb(unittest.TestCase):
             in str(context.exception)
         )
 
-    @patch("q2_viromics.virsorter2_fetch_db.run_command")
+    @patch("q2_virsorter2.virsorter2_fetch_db.run_command")
     def test_vs2_setup_success(self, mock_run_command):
         # Mock the database path
         mock_database = MagicMock()
@@ -92,7 +92,7 @@ class TestVirsorter2FetchDb(unittest.TestCase):
         mock_run_command.assert_called_once_with(expected_cmd)
 
     @patch(
-        "q2_viromics.virsorter2_fetch_db.run_command",
+        "q2_virsorter2.virsorter2_fetch_db.run_command",
         side_effect=subprocess.CalledProcessError(1, "cmd"),
     )
     def test_vs2_setup_failure(self, mock_run_command):
@@ -109,10 +109,10 @@ class TestVirsorter2FetchDb(unittest.TestCase):
             in str(context.exception)
         )
 
-    @patch("q2_viromics.virsorter2_fetch_db.Virsorter2DbDirFmt")
-    @patch("q2_viromics.virsorter2_fetch_db.vs2_setup")
-    @patch("q2_viromics.virsorter2_fetch_db.os.path.exists", return_value=True)
-    @patch("q2_viromics.virsorter2_fetch_db.shutil.rmtree")
+    @patch("q2_virsorter2.virsorter2_fetch_db.Virsorter2DbDirFmt")
+    @patch("q2_virsorter2.virsorter2_fetch_db.vs2_setup")
+    @patch("q2_virsorter2.virsorter2_fetch_db.os.path.exists", return_value=True)
+    @patch("q2_virsorter2.virsorter2_fetch_db.shutil.rmtree")
     def test_virsorter2_fetch_db_directory_exists(
         self, mock_rmtree, mock_exists, mock_vs2_setup, mock_Virsorter2DbDirFmt
     ):

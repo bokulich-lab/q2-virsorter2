@@ -8,7 +8,7 @@
 from qiime2.plugin import ValidationError
 from qiime2.plugin.testing import TestPluginBase
 
-from q2_viromics.types._format import (
+from q2_virsorter2.types._format import (
     GeneralBinaryFileFormat,
     GeneralTSVFormat,
     HallmarkGeneListFormat,
@@ -20,7 +20,7 @@ from q2_viromics.types._format import (
 
 
 class TestVirsorter2DbFormats(TestPluginBase):
-    package = "q2_viromics.tests"
+    package = "q2_virsorter2.tests"
 
     def test_Virsorter2Db_GeneralTSVFormat(self):
         filepath = self.get_data_path("type/vs2_db/hmm/pfam/Pfam-A.tsv")

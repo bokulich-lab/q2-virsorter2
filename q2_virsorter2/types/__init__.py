@@ -18,8 +18,6 @@ from ._type import Virsorter2Db
 
 __all__ = [
     "Virsorter2Db",
-    "ViralScore",
-    "ViralScoreFmt",
     "Virsorter2DbDirFmt",
     "HMMFormat",
     "GeneralBinaryFileFormat",
