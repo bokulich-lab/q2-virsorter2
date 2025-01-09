@@ -26,7 +26,7 @@ qiime dev refresh-cache
 ```
 
 ## Usage
-Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/BpFdP8bC9lcs7YW).
+Start by downloading sample input [datasets](https://polybox.ethz.ch/index.php/s/BpFdP8bC9lcs7YW/download).
 
 Fetch the VirSorter database:
 ```bash
